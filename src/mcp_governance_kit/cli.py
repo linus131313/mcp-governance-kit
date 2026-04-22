@@ -26,6 +26,8 @@ from mcp_governance_kit.attest import (
     sign_attestation,
     verify_attestation,
 )
+from mcp_governance_kit.mappings import available_frameworks, load_mapping
+from mcp_governance_kit.policy import Policy, evaluate
 from mcp_governance_kit.tcs import (
     REFERENCE,
     Config,
@@ -152,6 +154,50 @@ def verify(
         typer.echo(f"  - {reason}")
     if not result.valid:
         raise typer.Exit(code=1)
+
+
+@app.command()
+def check(
+    attestation_path: Annotated[Path, typer.Argument(help="Attestation JSON to evaluate.")],
+    policy_path: Annotated[Path, typer.Option("--policy", "-p", help="Policy YAML path.")],
+    previous_path: Annotated[
+        Path | None,
+        typer.Option("--previous", help="Previous attestation, enables B1/B6 diff."),
+    ] = None,
+) -> None:
+    """Evaluate B1–B6 against an attestation under the supplied policy."""
+    attestation = Attestation.model_validate_json(attestation_path.read_text(encoding="utf-8"))
+    previous = None
+    if previous_path:
+        previous = Attestation.model_validate_json(previous_path.read_text(encoding="utf-8"))
+    policy = Policy.load(policy_path)
+    report = evaluate(attestation, policy, previous=previous)
+    console.print_json(data=report.model_dump())
+    if report.blocked:
+        raise typer.Exit(code=1)
+
+
+mappings_app = typer.Typer(
+    name="mappings",
+    help="Framework-clause mappings for the breakpoint checks.",
+    no_args_is_help=True,
+)
+app.add_typer(mappings_app)
+
+
+@mappings_app.command("list")
+def mappings_list() -> None:
+    """List available framework mappings."""
+    for f in available_frameworks():
+        typer.echo(f)
+
+
+@mappings_app.command("show")
+def mappings_show(
+    framework: Annotated[str, typer.Argument(help="Framework key, e.g. iso42001.")],
+) -> None:
+    """Print the mapping for ``framework`` as JSON."""
+    console.print_json(data=load_mapping(framework))
 
 
 if __name__ == "__main__":  # pragma: no cover

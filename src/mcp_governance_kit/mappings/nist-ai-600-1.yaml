@@ -1,0 +1,70 @@
+framework: NIST AI 600-1 (Generative AI Profile, draft)
+scope: Suggested actions across GOVERN, MAP, MEASURE, MANAGE
+version: 2024-07-26
+source: https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf
+
+checks:
+  B1:
+    title: Change management
+    clauses:
+      - id: GOVERN-1.4-004
+        text: Establish policies for timely update/retirement of AI systems.
+      - id: MANAGE-2.4-002
+        text: Document governance of system modifications post-deployment.
+    notes: >
+      The Generative AI Profile does not name runtime tool binding, but
+      GOVERN-1.4 and MANAGE-2.4 can be satisfied by regular attestation
+      diffs.
+
+  B2:
+    title: Third-party risk
+    clauses:
+      - id: GOVERN-6.1-001
+        text: Establish policies for third-party AI-related risk.
+      - id: MAP-4.1-003
+        text: Document dependencies on third-party AI components.
+    notes: >
+      The allow-list + enumerated identities in the attestation are the
+      operational evidence for these actions.
+
+  B3:
+    title: Data loss prevention
+    clauses:
+      - id: MEASURE-2.10-002
+        text: Measure and mitigate information integrity and confidentiality risks.
+    notes: >
+      B3 provides the tool-graph-level view of exfil paths that
+      MEASURE-2.10 asks for but does not prescribe.
+
+  B4:
+    title: Privileged access
+    clauses:
+      - id: MANAGE-1.2-004
+        text: Apply access controls proportional to system capability.
+      - id: MANAGE-2.2-001
+        text: Monitor for high-risk operations by AI systems.
+    notes: >
+      TCS thresholds translate "proportional to capability" into a
+      single reviewable number.
+
+  B5:
+    title: Audit and monitoring
+    clauses:
+      - id: MEASURE-2.8-001
+        text: Log model and system usage for audit.
+      - id: MANAGE-2.3-002
+        text: Preserve logs sufficient to reconstruct events.
+    notes: >
+      Signed attestations plus the OCSF/CEF export satisfy both clauses.
+
+  B6:
+    title: AI-specific capability state
+    clauses:
+      - id: MAP-3.1-002
+        text: Document system purpose and operational context.
+      - id: MANAGE-4.2-001
+        text: Re-assess when functional scope changes.
+    notes: >
+      This is the clause family most adjacent to the paper's §6.1
+      diagnosis. The proposed NIST Agentic Profile (unpublished as of
+      April 2026) is expected to formalise the capability-state object.

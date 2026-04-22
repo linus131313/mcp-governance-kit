@@ -1,0 +1,14 @@
+# Developer role: full git/shell workflow permitted, strict cap.
+version: 1
+name: developer
+max_tcs: 20
+warn_tcs: 14
+max_third_party: 5
+third_party_allowlist:
+  - "@modelcontextprotocol/server-github"
+  - "@modelcontextprotocol/server-filesystem"
+  - "shell-mcp"
+  - "docker-mcp"
+require_approval_for_execute: false
+require_approval_for_changes: false
+allow_exfil_paths: false

@@ -1,0 +1,18 @@
+# Balanced default policy. Warns on deviations but only blocks the
+# highest-privilege mis-configurations. Intended as a starting point
+# for teams adopting the kit.
+version: 1
+name: default
+max_tcs: 30
+warn_tcs: 15
+max_third_party: 6
+third_party_allowlist:
+  - "@modelcontextprotocol/server-github"
+  - "@modelcontextprotocol/server-filesystem"
+  - "@modelcontextprotocol/server-sqlite"
+  - "@modelcontextprotocol/server-fetch"
+  - "shell-mcp"
+  - "docker-mcp"
+require_approval_for_execute: false
+require_approval_for_changes: false
+allow_exfil_paths: false

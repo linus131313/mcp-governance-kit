@@ -1,0 +1,70 @@
+framework: EU AI Act (Regulation (EU) 2024/1689)
+scope: Provisions relevant to general-purpose AI and agentic systems
+version: 2024-08-01 in force; GPAI obligations applicable 2025-08-02
+source: https://eur-lex.europa.eu/eli/reg/2024/1689/oj
+
+checks:
+  B1:
+    title: Change management
+    clauses:
+      - id: Art. 55(1)(b)
+        text: Providers of GPAI with systemic risk must document model changes.
+    notes: >
+      The Act addresses model modifications. The attestation diff
+      extends the same discipline to the tool graph.
+
+  B2:
+    title: Third-party risk
+    clauses:
+      - id: Art. 25
+        text: Obligations for deployers, distributors and importers.
+      - id: Art. 53(1)(b)
+        text: GPAI technical documentation including design choices.
+    notes: >
+      The attestation enumerates third-party servers and their versions
+      as technical documentation.
+
+  B3:
+    title: Data loss prevention
+    clauses:
+      - id: Art. 10
+        text: Data and data governance for high-risk AI systems.
+      - id: Art. 15(1)
+        text: Accuracy, robustness and cybersecurity of high-risk AI.
+    notes: >
+      B3 surfaces exfil paths the Art. 15 cybersecurity obligation
+      presupposes but does not enumerate.
+
+  B4:
+    title: Privileged access
+    clauses:
+      - id: Art. 14
+        text: Human oversight of high-risk AI systems.
+      - id: Art. 15(4)
+        text: Measures against unauthorised third-party modification.
+    notes: >
+      TCS + execute-tool enumeration operationalise the "oversight"
+      object Art. 14 presumes.
+
+  B5:
+    title: Audit and monitoring
+    clauses:
+      - id: Art. 12
+        text: Record-keeping (automatic logging for high-risk AI).
+      - id: Art. 55(1)(c)
+        text: Incident reporting for GPAI with systemic risk.
+    notes: >
+      The signed attestation and its OCSF/CEF export are the log records
+      Art. 12 requires.
+
+  B6:
+    title: AI-specific capability state
+    clauses:
+      - id: Art. 51
+        text: Classification of GPAI as presenting systemic risk.
+      - id: Art. 55(1)(a)
+        text: Model evaluation and adversarial testing for systemic-risk GPAI.
+    notes: >
+      Art. 51 criteria include autonomy and tool use as factors in
+      systemic-risk designation. B6 tracks the capability-surface shifts
+      that should trigger reassessment.

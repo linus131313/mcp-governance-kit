@@ -1,0 +1,13 @@
+# Analyst / data-science role: read and bounded write, no execute.
+version: 1
+name: restricted
+max_tcs: 10
+warn_tcs: 5
+max_third_party: 3
+third_party_allowlist:
+  - "@modelcontextprotocol/server-filesystem"
+  - "@modelcontextprotocol/server-sqlite"
+  - "@modelcontextprotocol/server-fetch"
+require_approval_for_execute: true
+require_approval_for_changes: true
+allow_exfil_paths: false

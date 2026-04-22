@@ -1,0 +1,75 @@
+framework: ISO/IEC 42001:2023
+scope: Annex A controls — AI Management System
+version: 2023-12
+source: https://www.iso.org/standard/81230.html
+
+checks:
+  B1:
+    title: Change management
+    clauses:
+      - id: A.6.2.5
+        text: AI system change management
+      - id: A.6.2.6
+        text: AI system operation and monitoring
+    notes: >
+      Annex A.6 assumes the AI system is a durable, approvable artefact.
+      The attestation diff (SPEC §6) reconstructs the change record
+      when the durable artefact is in fact a mutable tool graph.
+
+  B2:
+    title: Third-party risk
+    clauses:
+      - id: A.10.2
+        text: Third-party provider agreements
+      - id: A.10.3
+        text: Responsibilities within the AI system lifecycle
+    notes: >
+      A.10 presumes an enumerable vendor list. Attestations enumerate
+      per-server identity and version; the allow-list in the policy is
+      the operational translation.
+
+  B3:
+    title: Data loss prevention
+    clauses:
+      - id: A.7.4
+        text: Data provenance and quality
+      - id: A.8.3
+        text: Data for AI system operation
+    notes: >
+      The paper's B3 breakpoint is adjacent to, not covered by, A.7–A.8.
+      The attestation surfaces the local-to-network exfil path these
+      controls do not currently enumerate.
+
+  B4:
+    title: Privileged access
+    clauses:
+      - id: A.4.5
+        text: Resources for AI systems
+      - id: A.9.3
+        text: Objectives for responsible use of AI
+    notes: >
+      Privilege attaches transitively to any tool the agent can invoke;
+      the TCS threshold gives a single reviewable number.
+
+  B5:
+    title: Audit and monitoring
+    clauses:
+      - id: A.6.2.6
+        text: AI system operation and monitoring
+      - id: A.9.4
+        text: Intended use of the AI system
+    notes: >
+      The signed attestation is a first-class log record. OCSF / CEF
+      exports at check.evidence['cef'] support SIEM ingestion.
+
+  B6:
+    title: AI-specific capability state
+    clauses:
+      - id: A.6.2.4
+        text: AI system design and development
+      - id: A.6.2.8
+        text: AI system records
+    notes: >
+      This is the clause family the paper argues is silently broken.
+      A.6.2 reviews at deployment; B6 flags capability-state drift
+      between deployments.
