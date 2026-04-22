@@ -1,0 +1,310 @@
+{
+  "$defs": {
+    "Action": {
+      "description": "Action-level privilege a tool grants.",
+      "enum": [
+        "read",
+        "write",
+        "execute"
+      ],
+      "title": "Action",
+      "type": "string"
+    },
+    "ConfigSource": {
+      "additionalProperties": false,
+      "description": "The config file that was parsed to produce the attestation.",
+      "properties": {
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "title": "ConfigSource",
+      "type": "object"
+    },
+    "Host": {
+      "additionalProperties": false,
+      "description": "The MCP host the attestation describes.",
+      "properties": {
+        "id": {
+          "description": "Stable host identifier (hostname, agent name).",
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/HostKind"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "id",
+        "kind"
+      ],
+      "title": "Host",
+      "type": "object"
+    },
+    "HostKind": {
+      "description": "Known MCP host kinds; ``custom`` is the escape hatch.",
+      "enum": [
+        "claude-desktop",
+        "claude-code",
+        "cursor",
+        "custom"
+      ],
+      "title": "HostKind",
+      "type": "string"
+    },
+    "Reach": {
+      "description": "Where a tool can reach.",
+      "enum": [
+        "local",
+        "network"
+      ],
+      "title": "Reach",
+      "type": "string"
+    },
+    "ServerRecord": {
+      "additionalProperties": false,
+      "description": "An MCP server bound to the host.",
+      "properties": {
+        "identity": {
+          "description": "Package name, URL, or binary path that uniquely identifies the server.",
+          "minLength": 1,
+          "title": "Identity",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "third_party": {
+          "title": "Third Party",
+          "type": "boolean"
+        },
+        "transport": {
+          "$ref": "#/$defs/Transport"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "name",
+        "transport",
+        "identity",
+        "third_party"
+      ],
+      "title": "ServerRecord",
+      "type": "object"
+    },
+    "Signature": {
+      "additionalProperties": false,
+      "description": "Signature envelope. ``bundle`` is populated for sigstore-keyless.",
+      "properties": {
+        "bundle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Base64-encoded sigstore bundle when kind=sigstore-keyless.",
+          "title": "Bundle"
+        },
+        "kind": {
+          "$ref": "#/$defs/SignatureKind"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Signature",
+      "type": "object"
+    },
+    "SignatureKind": {
+      "description": "How the attestation is signed.",
+      "enum": [
+        "sigstore-keyless",
+        "unsigned"
+      ],
+      "title": "SignatureKind",
+      "type": "string"
+    },
+    "TcsBlock": {
+      "additionalProperties": false,
+      "description": "The computed TCS value together with the exact weights used.",
+      "properties": {
+        "third_party_count": {
+          "minimum": 0,
+          "title": "Third Party Count",
+          "type": "integer"
+        },
+        "value": {
+          "minimum": 0,
+          "title": "Value",
+          "type": "number"
+        },
+        "weights": {
+          "additionalProperties": {
+            "type": "number"
+          },
+          "title": "Weights",
+          "type": "object"
+        }
+      },
+      "required": [
+        "value",
+        "weights",
+        "third_party_count"
+      ],
+      "title": "TcsBlock",
+      "type": "object"
+    },
+    "ToolRecord": {
+      "additionalProperties": false,
+      "description": "A tool advertised by a server.",
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/Action"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "reach": {
+          "$ref": "#/$defs/Reach"
+        },
+        "resolved": {
+          "description": "True if the tool metadata came from a live MCP handshake; False if it was derived from a static manifest or the config alone.",
+          "title": "Resolved",
+          "type": "boolean"
+        },
+        "server": {
+          "$ref": "#/$defs/ServerRecord"
+        }
+      },
+      "required": [
+        "name",
+        "server",
+        "reach",
+        "action",
+        "resolved"
+      ],
+      "title": "ToolRecord",
+      "type": "object"
+    },
+    "Transport": {
+      "description": "MCP wire transports as of the 2025-11-25 spec.",
+      "enum": [
+        "stdio",
+        "sse",
+        "streamable-http"
+      ],
+      "title": "Transport",
+      "type": "string"
+    }
+  },
+  "$id": "https://github.com/linus131313/mcp-governance-kit/blob/main/src/mcp_governance_kit/attest/schemas/attestation-v0.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "A Capability-State Attestation v0 document.",
+  "properties": {
+    "attestation_id": {
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "title": "Attestation Id",
+      "type": "string"
+    },
+    "config_source": {
+      "$ref": "#/$defs/ConfigSource"
+    },
+    "host": {
+      "$ref": "#/$defs/Host"
+    },
+    "issued_at": {
+      "format": "date-time",
+      "title": "Issued At",
+      "type": "string"
+    },
+    "policy_refs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Policy Refs",
+      "type": "array"
+    },
+    "signature": {
+      "$ref": "#/$defs/Signature"
+    },
+    "spec_version": {
+      "default": "0",
+      "title": "Spec Version",
+      "type": "string"
+    },
+    "tcs": {
+      "$ref": "#/$defs/TcsBlock"
+    },
+    "tools": {
+      "items": {
+        "$ref": "#/$defs/ToolRecord"
+      },
+      "title": "Tools",
+      "type": "array"
+    }
+  },
+  "required": [
+    "host",
+    "config_source",
+    "tools",
+    "tcs"
+  ],
+  "title": "Capability-State Attestation v0",
+  "type": "object"
+}
