@@ -19,6 +19,13 @@ from rich.console import Console
 from rich.table import Table
 
 from mcp_governance_kit import __version__
+from mcp_governance_kit.attest import (
+    Attestation,
+    SigstoreUnavailable,
+    build_attestation,
+    sign_attestation,
+    verify_attestation,
+)
 from mcp_governance_kit.tcs import (
     REFERENCE,
     Config,
@@ -94,6 +101,57 @@ def tcs_sensitivity() -> None:
     """Run the 48-point sensitivity grid over the reference configurations."""
     report: SensitivityReport = sensitivity_analysis(REFERENCE, grid=reweighting_grid())
     console.print_json(data=report.model_dump())
+
+
+@app.command()
+def attest(
+    config_path: Annotated[Path, typer.Argument(help="Path to an MCP config file.")],
+    host_id: Annotated[str, typer.Option("--host-id", help="Stable identifier for the host.")],
+    out: Annotated[
+        Path | None,
+        typer.Option("--out", "-o", help="Write attestation JSON to this path."),
+    ] = None,
+    sign: Annotated[bool, typer.Option("--sign/--no-sign", help="Sign with sigstore.")] = False,
+) -> None:
+    """Collect, classify, score, and (optionally) sign an attestation."""
+    attestation: Attestation = build_attestation(config_path, host_id=host_id)
+    if sign:
+        try:
+            attestation = sign_attestation(attestation)
+        except SigstoreUnavailable as exc:
+            typer.secho(f"sigstore unavailable: {exc}", fg=typer.colors.RED, err=True)
+            raise typer.Exit(code=2) from exc
+
+    payload = attestation.model_dump_json(indent=2)
+    if out:
+        out.write_text(payload + "\n", encoding="utf-8")
+        typer.echo(f"wrote {out} (tcs={attestation.tcs.value})")
+    else:
+        typer.echo(payload)
+
+
+@app.command()
+def verify(
+    attestation_path: Annotated[Path, typer.Argument(help="Attestation JSON to verify.")],
+    expected_identity: Annotated[str | None, typer.Option("--expected-identity")] = None,
+    expected_issuer: Annotated[str | None, typer.Option("--expected-issuer")] = None,
+    allow_unsigned: Annotated[bool, typer.Option("--allow-unsigned/--require-signed")] = False,
+) -> None:
+    """Verify an attestation signature (and recompute its TCS)."""
+    attestation = Attestation.model_validate_json(attestation_path.read_text(encoding="utf-8"))
+    result = verify_attestation(
+        attestation,
+        expected_identity=expected_identity,
+        expected_issuer=expected_issuer,
+        allow_unsigned=allow_unsigned,
+    )
+    colour = typer.colors.GREEN if result.valid else typer.colors.RED
+    status = "VALID" if result.valid else "INVALID"
+    typer.secho(f"{status} ({result.signature_kind.value})", fg=colour)
+    for reason in result.reasons:
+        typer.echo(f"  - {reason}")
+    if not result.valid:
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":  # pragma: no cover

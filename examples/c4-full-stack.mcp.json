@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"]
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "supabase-mcp"]
+    },
+    "aws": {
+      "command": "npx",
+      "args": ["-y", "aws-mcp"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/code"]
+    },
+    "shell": {
+      "command": "npx",
+      "args": ["-y", "shell-mcp"]
+    },
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "docker-mcp"]
+    }
+  }
+}

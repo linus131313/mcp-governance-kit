@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "nmap": {
+      "command": "npx",
+      "args": ["-y", "nmap-mcp"]
+    },
+    "metasploit": {
+      "command": "npx",
+      "args": ["-y", "metasploit-mcp"]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/pentest"]
+    },
+    "shell": {
+      "command": "npx",
+      "args": ["-y", "shell-mcp"]
+    }
+  }
+}

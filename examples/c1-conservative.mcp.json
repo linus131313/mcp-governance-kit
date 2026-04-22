@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "filesystem-ro": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "--read-only", "/home/user/docs"]
+    }
+  }
+}
