@@ -1,0 +1,18 @@
+mcp-governance-kit
+Copyright 2026 Linus Teklenburg
+
+This product includes software developed by Linus Teklenburg.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not
+use this file except in compliance with the License. You may obtain a copy
+of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+The paper PDF in `paper/` and documentation in `docs/` are licensed under
+CC BY 4.0 (see LICENSE-docs).
+
+The Tool Graph Capability Score (TCS) algorithm and reference configurations
+(C1–C5, R1–R4) originate from the paper "The MCP Governance Gap: Empirical
+Evidence on Dynamic Tool Binding in Enterprise AI" by Linus Teklenburg,
+April 2026, archived in `paper/governance-speed-gap.pdf`.
