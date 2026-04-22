@@ -1,0 +1,10 @@
+- id: mcp-governance-check
+  name: MCP governance policy check
+  description: >-
+    Refuse the commit if the MCP configuration violates the active
+    policy. See github.com/linus131313/mcp-governance-kit.
+  entry: mcp-gov-pre-commit
+  language: python
+  additional_dependencies: ["mcp-governance-kit"]
+  files: '(\.mcp\.json|claude_desktop_config\.json|\.cursor/mcp\.json)$'
+  pass_filenames: true

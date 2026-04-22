@@ -1,0 +1,101 @@
+name: "MCP Governance Check"
+description: "Attest your MCP configuration and enforce a policy on every PR."
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  config-path:
+    description: "Path to the MCP config file (e.g. .mcp.json)."
+    required: true
+    default: ".mcp.json"
+  policy-path:
+    description: "Path to a policy YAML file."
+    required: true
+    default: "policies/default.yaml"
+  host-id:
+    description: "Stable host identifier recorded in the attestation."
+    required: false
+    default: "${{ github.repository }}"
+  fail-on-warn:
+    description: "If 'true', WARN results also fail the job."
+    required: false
+    default: "false"
+  sign:
+    description: "Sign the attestation with sigstore keyless (GitHub OIDC)."
+    required: false
+    default: "true"
+
+outputs:
+  attestation-path:
+    description: "Path to the produced attestation JSON."
+    value: ${{ steps.run.outputs.attestation-path }}
+  tcs:
+    description: "Tool Graph Capability Score of the attestation."
+    value: ${{ steps.run.outputs.tcs }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install mcp-governance-kit
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        if [[ "${{ inputs.sign }}" == "true" ]]; then
+          pip install "mcp-governance-kit[sign]"
+        else
+          pip install mcp-governance-kit
+        fi
+
+    - name: Attest and check
+      id: run
+      shell: bash
+      env:
+        FAIL_ON_WARN: ${{ inputs.fail-on-warn }}
+      run: |
+        set -euo pipefail
+        ATTEST_PATH="${RUNNER_TEMP}/attestation.json"
+        SIGN_FLAG=""
+        if [[ "${{ inputs.sign }}" == "true" ]]; then
+          SIGN_FLAG="--sign"
+        fi
+        mcp-gov attest "${{ inputs.config-path }}" \
+          --host-id "${{ inputs.host-id }}" \
+          --out "$ATTEST_PATH" \
+          $SIGN_FLAG
+        TCS_VALUE=$(python -c "import json; print(json.load(open('$ATTEST_PATH'))['tcs']['value'])")
+        echo "attestation-path=$ATTEST_PATH" >> "$GITHUB_OUTPUT"
+        echo "tcs=$TCS_VALUE" >> "$GITHUB_OUTPUT"
+
+        set +e
+        REPORT=$(mcp-gov check "$ATTEST_PATH" --policy "${{ inputs.policy-path }}")
+        RC=$?
+        set -e
+        echo "$REPORT"
+        {
+          echo "## MCP Governance Report"
+          echo
+          echo "**TCS:** $TCS_VALUE"
+          echo
+          echo '```json'
+          echo "$REPORT"
+          echo '```'
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        if [[ "$RC" -ne 0 ]]; then
+          echo "::error::policy evaluation BLOCKED"
+          exit 1
+        fi
+        if [[ "$FAIL_ON_WARN" == "true" ]]; then
+          if echo "$REPORT" | python -c "import sys, json; r=json.load(sys.stdin); sys.exit(0 if r['warnings']==0 else 1)"; then
+            exit 0
+          else
+            echo "::error::policy evaluation produced warnings (fail-on-warn=true)"
+            exit 1
+          fi
+        fi

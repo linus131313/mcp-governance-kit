@@ -71,6 +71,8 @@ Paper = "https://github.com/linus131313/mcp-governance-kit/blob/main/paper/gover
 
 [project.scripts]
 mcp-gov = "mcp_governance_kit.cli:app"
+mcp-gov-pre-commit = "mcp_governance_kit.integrations.pre_commit:main"
+mcp-gov-hook = "mcp_governance_kit.integrations.claude_code_hook:main"
 
 [tool.hatch.version]
 source = "vcs"
