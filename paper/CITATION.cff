@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software or the companion paper, please cite both."
+title: "mcp-governance-kit: Runtime Capability-State Attestation for MCP Agents"
+authors:
+  - family-names: Teklenburg
+    given-names: Linus
+    email: hey@linus-teklenburg.de
+    affiliation: Independent Researcher
+repository-code: https://github.com/linus131313/mcp-governance-kit
+license: Apache-2.0
+type: software
+preferred-citation:
+  type: article
+  title: "The MCP Governance Gap: Empirical Evidence on Dynamic Tool Binding in Enterprise AI"
+  authors:
+    - family-names: Teklenburg
+      given-names: Linus
+      email: hey@linus-teklenburg.de
+      affiliation: Independent Researcher
+  year: 2026
+  month: 4
+  url: "https://github.com/linus131313/mcp-governance-kit/blob/main/paper/governance-speed-gap.pdf"
