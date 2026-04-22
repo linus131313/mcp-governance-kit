@@ -112,7 +112,12 @@ select = [
     "PT",               # pytest-style
     "ARG",              # unused arguments
 ]
-ignore = ["E501"]  # handled by formatter
+ignore = [
+    "E501",   # line length handled by formatter
+    "RUF001", # allow EN DASH in strings (academic text)
+    "RUF002", # allow EN DASH in docstrings
+    "RUF003", # allow EN DASH in comments
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["ARG", "PT011"]
