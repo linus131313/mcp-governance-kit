@@ -53,7 +53,7 @@ jobs:
           cache: pip
       - run: pip install -e ".[dev,all]"
       - run: pytest -v
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v6
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
         with:
           files: coverage.xml
