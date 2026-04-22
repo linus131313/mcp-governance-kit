@@ -1,0 +1,62 @@
+site_name: mcp-governance-kit
+site_description: Runtime capability-state attestation for Model Context Protocol agents.
+site_url: https://linus131313.github.io/mcp-governance-kit/
+repo_url: https://github.com/linus131313/mcp-governance-kit
+repo_name: linus131313/mcp-governance-kit
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: true
+  - tables
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: false
+            docstring_style: sphinx
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Concepts:
+    - Tool Graph Capability Score: concepts/tcs.md
+    - Capability-State Attestation: concepts/attestation.md
+    - Control Breakpoints (B1-B6): concepts/breakpoints.md
+  - Guides:
+    - CI integration: guides/ci-integration.md
+    - Policy authoring: guides/policy-authoring.md
+    - Auditor handbook: guides/auditor-handbook.md
+  - Paper: paper.md
+  - Spec (v0): spec.md

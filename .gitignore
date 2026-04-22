@@ -56,3 +56,4 @@ site/
 *.key
 .env
 .env.local
+site/
