@@ -55,7 +55,7 @@ jobs:
       - uses: sigstore/gh-action-sigstore-python@v3.0.0
         with:
           inputs: ./dist/*.tar.gz ./dist/*.whl
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: |
             dist/*
